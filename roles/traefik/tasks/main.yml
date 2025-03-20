@@ -4,8 +4,14 @@
     path: /opt/traefik
     state: directory
 
+- name: Vérification existence du traefik-network
+  shell: docker network inspect traefik-network
+  register: network_check
+  ignore_errors: yes
+
 - name: Créer le network traefik-network
   shell: docker network create -d bridge traefik-network
+  when: network_check.rc != 0
 
 - name: Créer le fichier docker-compose de Traefik
   copy:
