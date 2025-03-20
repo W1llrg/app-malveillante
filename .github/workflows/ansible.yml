@@ -29,7 +29,7 @@ jobs:
       
       - name: Test SSH connection
         run: |
-	  ssh -o StrictHostKeyChecking=no root@185.98.138.237 "echo 'Connexion réussie'"
+          ssh -o StrictHostKeyChecking=no root@185.98.138.237 "echo 'Connexion réussie'"
 
       - name: Run Ansible playbook
         run: |
