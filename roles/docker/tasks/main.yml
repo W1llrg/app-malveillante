@@ -1,7 +1,5 @@
 ---
 - name: Install Docker and Docker Compose
-  hosts: all
-  become: yes
   tasks:
     - name: Install prerequisites
       apt:
