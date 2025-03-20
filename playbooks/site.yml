@@ -2,7 +2,6 @@
 - hosts: all
   become: true
   roles:
-    - ../roles/docker
     - ../roles/traefik
     - ../roles/project_manager
     - ../roles/monitoring
