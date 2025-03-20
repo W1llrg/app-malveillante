@@ -4,31 +4,34 @@
     path: /opt/traefik
     state: directory
 
+- name: Créer le network traefik-network
+  shell: docker network create -d bridge traefik-network
+
 - name: Créer le fichier docker-compose de Traefik
   copy:
     dest: /opt/traefik/docker-compose.yml
     content: |
       version: '3.3'
       services:
-        traefik:
-          image: traefik:v2.10
-          container_name: traefik
-          command:
-            - "--api.insecure=true"
-            - "--providers.docker"
-            - "--entrypoints.web.address=:80"
-            - "--entrypoints.websecure.address=:443"
-            - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
-            - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
-            - "--certificatesresolvers.myresolver.acme.email=example@example.com" 
-            - "--certificatesresolvers.myresolver.acme.storage=acme.json"
-          ports:
-            - "80:80"
-            - "443:443"
-            - "8080:8080"
-          volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
-            - ./acme.json:/acme.json
+      traefik:
+        image: traefik:v3.3
+        command:
+          - "--api.insecure=true"
+          - "--providers.docker=true"
+          - "--providers.docker.exposedbydefault=false"
+          - "--entrypoints.web.address=:80"
+        ports:
+          - "80:80"
+          - "8080:8080" # Traefik dashboard
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock:ro
+        networks:
+          - traefik-network
+          
+      networks:
+        traefik-network:
+          external: true
+          driver: bridge
 
 - name: Lancer Traefik
   shell: docker-compose up -d

@@ -3,15 +3,6 @@
     path: /opt/app-malveillante
     state: directory
 
-#- name: Copy application files
-#  copy:
-#    src: "{{ playbook_dir }}/../{{ item }}"
-#    dest: /opt/app-malveillante/
-#  with_items:
-#    - front-malveillant
-#    - api-malveillante
-#    - docker-compose.yml
-
 - name: Copy front-end code
   synchronize:
     src: "{{ playbook_dir }}/../front-malveillant"
