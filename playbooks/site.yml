@@ -1,6 +1,6 @@
 - hosts: all
-  become: true
-  roles:
-	- traefik
-	- project_manager
-	- monitoring
+ become: true
+ roles:
+  - traefik
+  - project_manager
+  - monitoring
