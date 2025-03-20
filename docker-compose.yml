@@ -40,13 +40,12 @@ services:
       - "80:80"
       - "8080:8080" # Traefik dashboard
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
       - traefik-network
 
 networks:
   traefik-network:
-    external: true
     driver: bridge
 
 volumes:
