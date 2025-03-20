@@ -1,0 +1,24 @@
+- name: Create app directory
+  file:
+    path: /opt/app-malveillante
+    state: directory
+
+- name: Copy front-end code
+  synchronize:
+    src: "{{ playbook_dir }}/../front-malveillant"
+    dest: /opt/app-malveillante/
+
+- name: Copy API code
+  synchronize:
+    src: "{{ playbook_dir }}/../api-malveillante"
+    dest: /opt/app-malveillante/
+
+- name: Copy docker-compose file
+  copy:
+    src: "{{ playbook_dir }}/../docker-compose.yml"
+    dest: /opt/app-malveillante/docker-compose.yml
+
+- name: Deploy with Docker Compose
+  shell: docker-compose up -d
+  args:
+    chdir: /opt/app-malveillante
