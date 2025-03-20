@@ -1,0 +1,54 @@
+services:
+  front-malveillant:
+    build:
+      context: ./front-malveillant
+      dockerfile: Dockerfile
+    volumes:
+      - front-data:/app/data
+    networks:
+      - traefik-network
+    ports:
+      - 3000:3000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.front.rule=Host(`front.localhost`)"
+      - "traefik.http.services.front.loadbalancer.server.port=3000"
+
+  api-malveillante:
+    build:
+      context: ./api-malveillante
+      dockerfile: Dockerfile
+    volumes:
+      - api-data:/app/data
+    networks:
+      - traefik-network
+    ports: 
+      - 4000:4000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`api.localhost`)"
+      - "traefik.http.services.api.loadbalancer.server.port=4000"
+
+  traefik:
+    image: traefik:v3.3
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080" # Traefik dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - traefik-network
+
+networks:
+  traefik-network:
+    external: true
+    driver: bridge
+
+volumes:
+  front-data:
+  api-data:
