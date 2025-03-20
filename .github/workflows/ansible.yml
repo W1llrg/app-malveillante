@@ -3,6 +3,9 @@ on:
   push:
     branches: [ main ]
 
+env:
+  ANSIBLE_HOST_KEY_CHECKING: "False"
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -24,6 +27,10 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       
+      - name: Test SSH connection
+        run: |
+	  ssh -o StrictHostKeyChecking=no root@185.98.138.237 "echo 'Connexion réussie'"
+
       - name: Run Ansible playbook
         run: |
-          ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory/hosts.ini playbooks/site.yml
+          ansible-playbook -i inventory/hosts.ini playbooks/site.yml
