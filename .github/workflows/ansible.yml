@@ -26,4 +26,4 @@ jobs:
       
       - name: Run Ansible playbook
         run: |
-          ansible-playbook -i inventory/hosts.ini playbooks/site.yml
+          ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory/hosts.ini playbooks/site.yml
