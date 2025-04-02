@@ -8,7 +8,9 @@ env:
 
 jobs:
   deploy:
-    runs-on: alpine/ansible
+    runs-on: ubuntu-latest
+    container:
+      image: alpine/ansible
     steps:
       - uses: actions/checkout@v3
 
