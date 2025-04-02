@@ -23,6 +23,11 @@ jobs:
           pip install ansible
           ansible-galaxy collection install kubernetes.core --force
 
+      - name: Install Kubernetes Python client
+        run: |
+          pip install kubernetes
+          pip show kubernetes
+
       - name: Setup SSH key
         uses: webfactory/ssh-agent@v0.7.0
         with:
