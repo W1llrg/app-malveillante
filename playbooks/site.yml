@@ -5,6 +5,11 @@
     app_name: app-malveillante
 
   pre_tasks:
+    - name: Install pip for Python3
+      package:
+        name: python3-pip
+        state: present
+
     - name: Install Python Kubernetes module
       pip:
         name: kubernetes
