@@ -11,19 +11,19 @@
 - name: Création volume
   kubernetes.core.k8s:
     state: present
-    src: "{{ playbook_dir }}/../kubernetes/persistent-volume.yaml"
+    src: "{{ playbook_dir }}/../kubernetes/persistent-volume.yml"
     namespace: "{{ app_name }}"
 
 - name: Déploiement API
   kubernetes.core.k8s:
     state: present
-    src: "{{ playbook_dir }}/../kubernetes/api-deployment.yaml"
+    src: "{{ playbook_dir }}/../kubernetes/api-deployment.yml"
     namespace: "{{ app_name }}"
 
 - name: Déploiement Frontend
   kubernetes.core.k8s:
     state: present
-    src: "{{ playbook_dir }}/../kubernetes/frontend-deployment.yaml"
+    src: "{{ playbook_dir }}/../kubernetes/frontend-deployment.yml"
     namespace: "{{ app_name }}"
 
 - name: Attente du déploiement de tous les services

@@ -3,6 +3,17 @@
   become: true
   vars:
     app_name: app-malveillante
+
+  pre_tasks:
+    - name: Install Python Kubernetes module
+      pip:
+        name: kubernetes
+        state: present
+
+    - name: Verify Kubernetes module installation
+      command: python3 -c "import kubernetes"
+      changed_when: false
+
   roles:
     - ../roles/kubernetes
 #    - ../roles/docker
