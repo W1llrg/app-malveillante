@@ -4,8 +4,8 @@
   vars:
     app_name: app-malveillante
   roles:
-    - ../roles/kubernetes
+#    - ../roles/kubernetes
 #    - ../roles/docker
 #    - ../roles/traefik
-#    - ../roles/project_manager
+    - ../roles/project_manager
 #    - ../roles/monitoring
