@@ -1,8 +1,11 @@
 ---
-- hosts: all
+- hosts: k8s_servers
   become: true
+  vars:
+    app_name: app-malveillante
   roles:
-    - ../roles/docker
-    - ../roles/traefik
-    - ../roles/project_manager
-    - ../roles/monitoring
+    - ../roles/kubernetes
+#    - ../roles/docker
+#    - ../roles/traefik
+#    - ../roles/project_manager
+#    - ../roles/monitoring

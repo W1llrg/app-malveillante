@@ -1,0 +1,50 @@
+---
+- name: Création namespace
+  kubernetes.k8s.core:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: "{{ app_name }}"
+
+- name: Création volume
+  kubernetes.core.k8s:
+    state: present
+    src: "{{ playbook_dir }}/../kubernetes/persistent-volume.yaml"
+    namespace: "{{ app_name }}"
+
+- name: Déploiement API
+  kubernetes.core.k8s:
+    state: present
+    src: "{{ playbook_dir }}/../kubernetes/api-deployment.yaml"
+    namespace: "{{ app_name }}"
+
+- name: Déploiement Frontend
+  kubernetes.core.k8s:
+    state: present
+    src: "{{ playbook_dir }}/../kubernetes/frontend-deployment.yaml"
+    namespace: "{{ app_name }}"
+
+- name: Attente du déploiement de tous les services
+  kubernetes.core.k8s_info:
+    kind: Deployment
+    name: "{{ item }}"
+    namespace: "{{ app_name }}"
+    wait: yes
+    wait_condition:
+      type: Available
+      status: "True"
+    wait_timeout: 300
+  loop:
+    - api-deployment
+    - frontend-deployment
+
+- name: Vérification status PVC
+  kubernetes.core.k8s_info:
+    kind: PersistentVolumeClaim
+    name: app-data-pvc
+    namespace: "{{ app_name }}"
+  register: pvc_status
+- debug:
+    var: pvc_status.resources[0].status.phase
