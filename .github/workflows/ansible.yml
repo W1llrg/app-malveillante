@@ -8,25 +8,9 @@ env:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: alpine/ansible
     steps:
       - uses: actions/checkout@v3
-      
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-
-      - name: Install Ansible
-        run: |
-          python -m pip install --upgrade pip
-          pip install ansible
-          ansible-galaxy collection install kubernetes.core --force
-
-      - name: Install Kubernetes Python client
-        run: |
-          pip install kubernetes
-          pip show kubernetes
 
       - name: Setup SSH key
         uses: webfactory/ssh-agent@v0.7.0
