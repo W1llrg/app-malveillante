@@ -1,6 +1,6 @@
 ---
 - name: Création namespace
-  kubernetes.k8s.core:
+  kubernetes.core.k8s:
     state: present
     definition:
       apiVersion: v1
