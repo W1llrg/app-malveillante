@@ -11,8 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: alpine/ansible
-      volumes:
-        - /__w/app-malveillante/app-malveillante:/app
     steps:
       - uses: actions/checkout@v3
 
