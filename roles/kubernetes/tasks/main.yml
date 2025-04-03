@@ -10,19 +10,34 @@
         name: "{{ app_name }}"
   become: yes
 
-- name: Check files location
-  shell: find / -name "persistent-volume.yml" 2>/dev/null
+- name: Check current working directory structure
+  shell: find . -type f -name "*.yml" | grep -E "kubernetes|roles"
   register: find_output
+  ignore_errors: yes
 
 - name: Display found files
   debug:
     var: find_output.stdout_lines
+  when: find_output.stdout != ""
+
+- name: Get absolute path to playbook directory
+  shell: pwd
+  register: pwd_output
+
+- name: Debug playbook location
+  debug:
+    var: playbook_dir
+
+- name: Copy Kubernetes manifests to remote host
+  copy:
+    src: "{{ playbook_dir }}/../kubernetes/"
+    dest: "/tmp/kubernetes/"
 
 - name: Création volume
   kubernetes.core.k8s:
     kubeconfig: /etc/rancher/k3s/k3s.yaml
     state: present
-    src: "{{ playbook_dir }}/../kubernetes/persistent-volume.yml"
+    src: "/tmp/kubernetes/persistent-volume.yml"
     namespace: "{{ app_name }}"
   become: yes
 
@@ -30,7 +45,7 @@
   kubernetes.core.k8s:
     kubeconfig: /etc/rancher/k3s/k3s.yaml
     state: present
-    src: "{{ playbook_dir }}/../kubernetes/api-deployment.yml"
+    src: "/tmp/kubernetes/api-deployment.yml"
     namespace: "{{ app_name }}"
   become: yes
 
@@ -38,7 +53,7 @@
   kubernetes.core.k8s:
     kubeconfig: /etc/rancher/k3s/k3s.yaml
     state: present
-    src: "{{ playbook_dir }}/../kubernetes/frontend-deployment.yml"
+    src: "/tmp/kubernetes/frontend-deployment.yml"
     namespace: "{{ app_name }}"
   become: yes
 
