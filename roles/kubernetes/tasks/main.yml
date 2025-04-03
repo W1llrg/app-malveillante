@@ -14,7 +14,7 @@
   kubernetes.core.k8s:
     kubeconfig: /etc/rancher/k3s/k3s.yaml
     state: present
-    src: "{{ playbook_dir }}"
+    src: "{{ playbook_dir }}/../kubernetes/persistent-volume.yml"
     namespace: "{{ app_name }}"
   become: yes
 
@@ -22,7 +22,7 @@
   kubernetes.core.k8s:
     kubeconfig: /etc/rancher/k3s/k3s.yaml
     state: present
-    src: "../../../kubernetes/api-deployment.yml"
+    src: "{{ playbook_dir }}/../kubernetes/api-deployment.yml"
     namespace: "{{ app_name }}"
   become: yes
 
@@ -30,7 +30,7 @@
   kubernetes.core.k8s:
     kubeconfig: /etc/rancher/k3s/k3s.yaml
     state: present
-    src: "../../../kubernetes/frontend-deployment.yml"
+    src: "{{ playbook_dir }}/../kubernetes/frontend-deployment.yml"
     namespace: "{{ app_name }}"
   become: yes
 
