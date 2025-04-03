@@ -12,9 +12,6 @@
 
 - name: Check PWD
   bash: pwd
-  register: pwd_output
-  debug:
-    var: pwd_output.stdout
 
 - name: Création volume
   kubernetes.core.k8s:
