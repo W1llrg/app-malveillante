@@ -1,4 +1,10 @@
 ---
+- name: Check PWD
+  bash: pwd
+  register: pwd_output
+  debug:
+    var: pwd_output.stdout
+
 - name: Création namespace
   kubernetes.core.k8s:
     kubeconfig: /etc/rancher/k3s/k3s.yaml
