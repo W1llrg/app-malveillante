@@ -18,6 +18,14 @@
   debug:
     var: pwd_output.stdout
 
+- name: LS les fichiers
+  shell: ls -la
+  register: ls_output
+
+- name: Display fichiers
+  debug:
+    var: ls_output.stdout
+
 - name: Création volume
   kubernetes.core.k8s:
     kubeconfig: /etc/rancher/k3s/k3s.yaml
