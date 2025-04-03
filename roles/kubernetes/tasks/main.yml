@@ -11,7 +11,10 @@
   become: yes
 
 - name: Check PWD
-  bash: pwd
+  shell: echo $PWD
+  register: pwd_output
+  debug:
+    var: pwd_output.stdout
 
 - name: Création volume
   kubernetes.core.k8s:
