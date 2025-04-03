@@ -1,30 +1,38 @@
 ---
 - name: Création namespace
   kubernetes.core.k8s:
+    kubeconfig: /etc/rancher/k3s/k3s.yml
     state: present
     definition:
       apiVersion: v1
       kind: Namespace
       metadata:
         name: "{{ app_name }}"
+  become: yes
 
 - name: Création volume
   kubernetes.core.k8s:
+    kubeconfig: /etc/rancher/k3s/k3s.yml
     state: present
     src: "{{ playbook_dir }}/../kubernetes/persistent-volume.yml"
     namespace: "{{ app_name }}"
+  become: yes
 
 - name: Déploiement API
   kubernetes.core.k8s:
+    kubeconfig: /etc/rancher/k3s/k3s.yml
     state: present
     src: "{{ playbook_dir }}/../kubernetes/api-deployment.yml"
     namespace: "{{ app_name }}"
+  become: yes
 
 - name: Déploiement Frontend
   kubernetes.core.k8s:
+    kubeconfig: /etc/rancher/k3s/k3s.yml
     state: present
     src: "{{ playbook_dir }}/../kubernetes/frontend-deployment.yml"
     namespace: "{{ app_name }}"
+  become: yes
 
 - name: Attente du déploiement de tous les services
   kubernetes.core.k8s_info:
