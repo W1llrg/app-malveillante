@@ -13,6 +13,8 @@
 - name: Check PWD
   shell: echo $PWD
   register: pwd_output
+
+- name: Display PWD
   debug:
     var: pwd_output.stdout
 
