@@ -18,7 +18,13 @@ jobs:
         uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      
+
+#      - name: Setup kubeconfig
+#        run: |
+#          mkdir -p ~/.kube
+#          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+#          chmod 600 ~/.kube/config
+
       - name: Test SSH connection
         run: |
           ssh -o StrictHostKeyChecking=no root@185.98.138.237 "echo 'Connexion réussie'"
