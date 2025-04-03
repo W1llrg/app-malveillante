@@ -14,7 +14,7 @@
   kubernetes.core.k8s:
     kubeconfig: /etc/rancher/k3s/k3s.yaml
     state: present
-    src: "../../../kubernetes/persistent-volume.yml"
+    src: "{{ playbook_dir }}"
     namespace: "{{ app_name }}"
   become: yes
 
