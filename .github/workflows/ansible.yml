@@ -19,11 +19,11 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-#      - name: Setup kubeconfig
-#        run: |
-#          mkdir -p ~/.kube
-#          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
-#          chmod 600 ~/.kube/config
+      - name: Setup kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+          chmod 600 ~/.kube/config
 
       - name: Test SSH connection
         run: |

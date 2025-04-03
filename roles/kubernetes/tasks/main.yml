@@ -1,18 +1,6 @@
 ---
-- name: Setup kubeconfig
-  ansible.builtin.set_fact:
-    kubeconfig: "/root/.kube/config"
-
-- name: Vérification kubeconfig
-  ansible.builtin.file:
-    path: "/root/.kube"
-    state: directory
-    mode: '0700'
-  when: kubeconfig is defined
-
 - name: Création namespace
   kubernetes.core.k8s:
-    kubeconfig: "{{ kubeconfig }}"
     state: present
     definition:
       apiVersion: v1
@@ -22,21 +10,18 @@
 
 - name: Création volume
   kubernetes.core.k8s:
-    kubeconfig: "{{ kubeconfig }}"
     state: present
     src: "{{ playbook_dir }}/../kubernetes/persistent-volume.yml"
     namespace: "{{ app_name }}"
 
 - name: Déploiement API
   kubernetes.core.k8s:
-    kubeconfig: "{{ kubeconfig }}"
     state: present
     src: "{{ playbook_dir }}/../kubernetes/api-deployment.yml"
     namespace: "{{ app_name }}"
 
 - name: Déploiement Frontend
   kubernetes.core.k8s:
-    kubeconfig: "{{ kubeconfig }}"
     state: present
     src: "{{ playbook_dir }}/../kubernetes/frontend-deployment.yml"
     namespace: "{{ app_name }}"
