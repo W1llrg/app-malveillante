@@ -10,27 +10,19 @@
         name: "{{ app_name }}"
   become: yes
 
-- name: Check PWD
-  shell: echo $PWD
-  register: pwd_output
+- name: Check files location
+  shell: find / -name "persistent-volume.yml" 2>/dev/null
+  register: find_output
 
-- name: Display PWD
+- name: Display found files
   debug:
-    var: pwd_output.stdout
-
-- name: LS les fichiers
-  shell: ls -la
-  register: ls_output
-
-- name: Display fichiers
-  debug:
-    var: ls_output.stdout
+    var: find_output.stdout_lines
 
 - name: Création volume
   kubernetes.core.k8s:
     kubeconfig: /etc/rancher/k3s/k3s.yaml
     state: present
-    src: "./kubernetes/persistent-volume.yml"
+    src: "{{ playbook_dir }}/../kubernetes/persistent-volume.yml"
     namespace: "{{ app_name }}"
   become: yes
 
@@ -38,7 +30,7 @@
   kubernetes.core.k8s:
     kubeconfig: /etc/rancher/k3s/k3s.yaml
     state: present
-    src: "./kubernetes/api-deployment.yml"
+    src: "{{ playbook_dir }}/../kubernetes/api-deployment.yml"
     namespace: "{{ app_name }}"
   become: yes
 
@@ -46,7 +38,7 @@
   kubernetes.core.k8s:
     kubeconfig: /etc/rancher/k3s/k3s.yaml
     state: present
-    src: "./kubernetes/frontend-deployment.yml"
+    src: "{{ playbook_dir }}/../kubernetes/frontend-deployment.yml"
     namespace: "{{ app_name }}"
   become: yes
 
