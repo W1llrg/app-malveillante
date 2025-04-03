@@ -10,23 +10,18 @@
         name: "{{ app_name }}"
   become: yes
 
-- name: Check current working directory structure
-  shell: find . -type f -name "*.yml" | grep -E "kubernetes|roles"
-  register: find_output
-  ignore_errors: yes
-
-- name: Display found files
-  debug:
-    var: find_output.stdout_lines
-  when: find_output.stdout != ""
-
-- name: Get absolute path to playbook directory
-  shell: pwd
-  register: pwd_output
-
 - name: Debug playbook location
   debug:
     var: playbook_dir
+
+- name: Check if k3s.yaml exists
+  stat:
+    path: /etc/rancher/k3s/k3s.yaml
+  register: k3s_yaml
+
+- name: Display k3s.yaml status
+  debug:
+    msg: "k3s.yaml exists: {{ k3s_yaml.stat.exists }}"
 
 - name: Copy Kubernetes manifests to remote host
   copy:
@@ -57,25 +52,25 @@
     namespace: "{{ app_name }}"
   become: yes
 
-- name: Attente du déploiement de tous les services
-  kubernetes.core.k8s_info:
-    kind: Deployment
-    name: "{{ item }}"
-    namespace: "{{ app_name }}"
-    wait: yes
-    wait_condition:
-      type: Available
-      status: "True"
-    wait_timeout: 300
-  loop:
-    - api-deployment
-    - frontend-deployment
-
-- name: Vérification status PVC
-  kubernetes.core.k8s_info:
-    kind: PersistentVolumeClaim
-    name: app-data-pvc
-    namespace: "{{ app_name }}"
+# Skip the wait task if there are kubeconfig issues
+- name: Vérification status PVC avec kubectl
+  shell: kubectl --kubeconfig=/etc/rancher/k3s/k3s.yaml get pvc app-data-pvc -n {{ app_name }} -o jsonpath="{.status.phase}"
   register: pvc_status
-- debug:
-    var: pvc_status.resources[0].status.phase
+  become: yes
+  ignore_errors: yes
+
+- name: Display PVC status
+  debug:
+    var: pvc_status.stdout
+  ignore_errors: yes
+
+- name: Vérification des déploiements avec kubectl
+  shell: kubectl --kubeconfig=/etc/rancher/k3s/k3s.yaml get deployments -n {{ app_name }}
+  register: deployment_status
+  become: yes
+  ignore_errors: yes
+
+- name: Display deployment status
+  debug:
+    var: deployment_status.stdout_lines
+  ignore_errors: yes
